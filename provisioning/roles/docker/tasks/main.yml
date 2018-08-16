@@ -1,0 +1,48 @@
+---
+- name: Add signing keys
+  become: yes
+  apt_key: url={{ item }} state=present
+  with_items:
+    - https://download.docker.com/linux/ubuntu/gpg
+
+- name: Update repositories
+  become: yes
+  apt_repository: repo={{ item }} state=present
+  with_items:
+    - deb https://download.docker.com/linux/ubuntu xenial stable
+
+- name: Update packages
+  apt: update-cache=yes cache_valid_time=1800
+  become: yes
+
+- name: Install packages
+  become: yes
+  apt: name={{ item }} state=present
+  with_items:
+    - docker-ce
+
+- name: Add current user to docker group
+  user: name=vagrant append=yes groups=docker
+  become: yes
+  notify:
+    - restart docker
+
+- name: Install docker-compose
+  become: yes
+  get_url:
+    url: https://github.com/docker/compose/releases/download/1.22.0/docker-compose-{{ ansible_system }}-{{ ansible_machine }}
+    dest: /usr/local/bin/docker-compose
+    mode: +x
+
+- name: Download nfs plugin
+  become: yes
+  get_url:
+    url: https://github.com/ContainX/docker-volume-netshare/releases/download/v0.34/docker-volume-netshare_0.34_amd64.deb
+    dest: /opt/docker-volume-netshare.deb
+
+- name: Install nfs plugin
+  become: yes
+  apt:
+    deb: /opt/docker-volume-netshare.deb
+  notify:
+    - restart nfs

@@ -1,0 +1,17 @@
+---
+- name: Add tmux ppa
+  apt_repository: repo='ppa:pi-rho/dev'
+  become: yes
+
+- name: Install tmux from package repository
+  apt: name={{ item }} state=latest update_cache=yes
+  become: yes
+  with_items:
+    - tmux
+    - upower
+
+- name: Copy settings
+  copy: src=tmux.conf dest=~/.tmux.conf
+
+- name: Install tmux package manager
+  git: repo=https://github.com/tmux-plugins/tpm dest=~/.tmux/plugins/tpm

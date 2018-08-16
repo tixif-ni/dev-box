@@ -1,0 +1,18 @@
+---
+- hosts: all
+  remote_user: vagrant
+  roles:
+    - common
+    - docker
+
+- hosts: master
+  remote_user: vagrant
+  roles:
+    - git
+    - zsh
+    - tmux
+    - python
+    - nvm
+    - vim
+    #- rvm
+    #- android

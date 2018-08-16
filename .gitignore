@@ -1,0 +1,4 @@
+.vagrant
+.vs
+*.log
+*.retry

@@ -1,0 +1,7 @@
+.ropeproject/
+tags
+*.swp
+*.orig
+*.*~
+.vagrant
+*.pyc

@@ -1,0 +1,33 @@
+---
+- name: Install vim from package repository
+  apt: name={{ item }} state=latest
+  with_items:
+    - vim
+    - exuberant-ctags
+    - ack-grep
+  become: yes
+
+# Download settings from own repository
+- name: Download vim folder
+  git:
+    repo=https://github.com/radyz/vim-radyz.git
+    dest=~/.vim
+    force=yes
+
+- name: Create symlink to vimrc
+  file: src=~/.vim/.vimrc dest=~/.vimrc state=link
+
+- name: Create symlink to pathogen
+  file:
+    src=~/.vim/autoload/vim-pathogen/autoload/pathogen.vim
+    dest=~/.vim/autoload/pathogen.vim
+    state=link
+
+- name: Create symlink to hybrid theme
+  file:
+    src=~/.vim/colors/hybrid/colors/hybrid.vim
+    dest=~/.vim/colors/hybrid.vim
+    state=link
+
+- name: Copy ackrc to home
+  copy: src=ackrc dest=~/.ackrc 

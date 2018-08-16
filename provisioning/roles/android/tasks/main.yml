@@ -1,0 +1,73 @@
+---
+- name: Install java
+  apt: name={{ item }} state=latest
+  become: yes
+  with_items:
+    - openjdk-7-jdk
+    - ant
+    - gradle
+    - maven
+    - lib32ncurses5
+    - lib32gomp1
+    - lib32z1-dev
+    - lib32ncurses5
+    - lib32gomp1
+    - lib32z1-dev
+
+- name: Download Android SDK
+  get_url:
+    url=https://dl.google.com/android/android-sdk_{{ version }}-linux.tgz
+    dest=/tmp
+
+- name: Untar Android SDK
+  command: tar zxf android-sdk_{{ version }}-linux.tgz chdir=/tmp
+
+- name: Move Android SDK to home folder
+  command: cp android-sdk-linux /opt -rf chdir=/tmp
+  become: yes
+
+- name: Get user name
+  shell: id -u -n
+  register: user_name
+
+- name: Get user group
+  shell: id -g -n
+  register: user_group
+
+- name: Set sdk folder permissions
+  file:
+    path=/opt/android-sdk-linux
+    recurse=yes
+    state=directory
+    owner={{ user_name.stdout }}
+    group={{ user_group.stdout }}
+  become: yes
+
+- name: Set vars
+  lineinfile:
+    line={{ item }}
+    dest=~/.zshrc
+    state=present
+    create=yes
+  with_items:
+    - "export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64"
+    - "export ANDROID_HOME=/opt/android-sdk-linux"
+    - "export ANDROID_TOOLS=$ANDROID_HOME/tools/"
+    - "export ANDROID_PLATFORM_TOOLS=$ANDROID_HOME/platform-tools/"
+    - "export PATH=$PATH:$ANDROID_TOOLS:$ANDROID_PLATFORM_TOOLS"
+
+- name: Install android platform-tools
+  shell: "echo y | /opt/android-sdk-linux/tools/android update sdk --no-ui --all --filter {{ item }}"
+  with_items:
+    - "tools"
+    - "platform-tools"
+    - "build-tools-24"
+    - "build-tools-23.0.3"
+    - "build-tools-22.0.1"
+    - "android-23"
+    - "android-22"
+    - "android-21"
+    - "extra-android-support"
+    - "extra-google-m2repository"
+    - "extra-google-google_play_services"
+    - "extra-android-m2repository"

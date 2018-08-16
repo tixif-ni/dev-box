@@ -1,0 +1,20 @@
+---
+- name: Install zsh
+  apt: name=zsh
+  become: yes
+
+- name: Clone oh-my-zsh repo
+  git: repo=https://github.com/robbyrussell/oh-my-zsh.git dest=~/.oh-my-zsh
+
+- name: symlink zshrc
+  copy: src=zshrc dest=~/.zshrc
+
+- name: Set zsh as default shell
+  user: shell=/bin/zsh name={{ ansible_ssh_user }}
+  become: true
+
+- name: Download theme
+  git: repo=https://github.com/caiogondim/bullet-train-oh-my-zsh-theme.git dest=~/.oh-my-zsh/custom/themes/bullet-train
+
+- name: Create symlink to theme
+  file: src=~/.oh-my-zsh/custom/themes/bullet-train/bullet-train.zsh-theme dest=~/.oh-my-zsh/custom/themes/bullet-train.zsh-theme state=link

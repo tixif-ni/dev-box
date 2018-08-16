@@ -1,0 +1,22 @@
+---
+- name: update package repository
+  apt: update-cache=yes cache_valid_time=1800
+  become: yes
+
+- name: Install common packages
+  apt: name={{ item }} state=latest
+  become: yes
+  with_items:
+    - ncdu
+    - ufw
+    - dos2unix
+    - unzip
+    - curl
+    - wget
+    - htop
+    - moreutils
+    - libevent-dev
+    - apt-transport-https
+    - ca-certificates
+    - software-properties-common
+    - apache2-utils

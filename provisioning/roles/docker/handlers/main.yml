@@ -1,0 +1,8 @@
+---
+- name: restart docker
+  service: name=docker state=restarted
+  become: yes
+
+- name: restart nfs
+  service: name=docker-volume-netshare state=restarted
+  become: yes
