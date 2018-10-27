@@ -18,7 +18,9 @@
       apt-transport-https,
       ca-certificates,
       software-properties-common,
-      apache2-utils
+      apache2-utils,
+      nfs-common,
+      rng-tools
     ]
     state: latest
   become: yes
