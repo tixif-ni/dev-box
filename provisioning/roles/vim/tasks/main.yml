@@ -1,10 +1,8 @@
 ---
 - name: Install vim from package repository
-  apt: name={{ item }} state=latest
-  with_items:
-    - vim
-    - exuberant-ctags
-    - ack-grep
+  apt:
+    name: [vim, exuberant-ctags, ack-grep]
+    state: latest
   become: yes
 
 # Download settings from own repository

@@ -4,11 +4,11 @@
   become: yes
 
 - name: Install tmux from package repository
-  apt: name={{ item }} state=latest update_cache=yes
+  apt:
+    name: [tmux, upower]
+    state: latest
+    update_cache: yes
   become: yes
-  with_items:
-    - tmux
-    - upower
 
 - name: Copy settings
   copy: src=tmux.conf dest=~/.tmux.conf
