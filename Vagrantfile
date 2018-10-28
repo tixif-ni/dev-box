@@ -9,14 +9,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     servers = [{
         :hostname => "master",
         :ram => 2048,
-        :size => '40gb',
+        :size => "35GB",
         :primary => true,
         :ip => "192.168.2.10",
         :mac => "EE4E228EF848"
     }, {
         :hostname => "node",
         :ram => 2048,
-        :size => '10gb',
+        :size => "15GB",
         :ip => "192.168.2.11",
         :mac => "AAC856C806F1"
     }]
