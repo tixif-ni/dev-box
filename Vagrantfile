@@ -9,12 +9,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     servers = [{
         :hostname => "master",
         :ram => 2048,
+        :size => '40gb',
         :primary => true,
         :ip => "192.168.2.10",
         :mac => "EE4E228EF848"
     }, {
         :hostname => "node",
         :ram => 2048,
+        :size => '10gb',
         :ip => "192.168.2.11",
         :mac => "AAC856C806F1"
     }]
@@ -25,6 +27,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             node.vm.hostname = machine[:hostname]
             node.vm.network :private_network, ip: machine[:ip]
             node.vm.provision :hosts, :sync_hosts => true
+            node.disksize.size = machine[:size]
 
             node.vm.provider :virtualbox do |vb|
               vb.linked_clone = true
