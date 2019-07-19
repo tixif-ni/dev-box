@@ -1,29 +1,39 @@
 ---
-- name: Install java
-  apt: name={{ item }} state=latest
+- name: Install Dependencies
   become: yes
-  with_items:
-    - openjdk-7-jdk
-    - ant
-    - gradle
-    - maven
-    - lib32ncurses5
-    - lib32gomp1
-    - lib32z1-dev
-    - lib32ncurses5
-    - lib32gomp1
-    - lib32z1-dev
+  apt:
+    name: [
+      openjdk-8-jdk,
+      ant,
+      gradle,
+      maven,
+      lib32ncurses6,
+      lib32gomp1,
+      lib32z1-dev,
+      lib32gomp1,
+      lib32z1-dev,
+    ]
+
+- name: Remove conflicting java packages
+  become: yes
+  apt:
+    name: [openjdk-11*]
+    state: absent
 
 - name: Download Android SDK
   get_url:
-    url=https://dl.google.com/android/android-sdk_{{ version }}-linux.tgz
+    url=https://dl.google.com/android/repository/sdk-tools-linux-{{ version }}.zip
     dest=/tmp
 
-- name: Untar Android SDK
-  command: tar zxf android-sdk_{{ version }}-linux.tgz chdir=/tmp
+- name: Unzip Android SDK
+  unarchive: src=/tmp/sdk-tools-linux-{{ version }}.zip dest=/tmp
+
+- name: Create Android SDK folder
+  file: path=/opt/android-sdk-linux state=directory mode=0755
+  become: yes
 
 - name: Move Android SDK to home folder
-  command: cp android-sdk-linux /opt -rf chdir=/tmp
+  command: cp tools /opt/android-sdk-linux/tools -rf chdir=/tmp
   become: yes
 
 - name: Get user name
@@ -50,24 +60,9 @@
     state=present
     create=yes
   with_items:
-    - "export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64"
+    - "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64"
     - "export ANDROID_HOME=/opt/android-sdk-linux"
-    - "export ANDROID_TOOLS=$ANDROID_HOME/tools/"
-    - "export ANDROID_PLATFORM_TOOLS=$ANDROID_HOME/platform-tools/"
-    - "export PATH=$PATH:$ANDROID_TOOLS:$ANDROID_PLATFORM_TOOLS"
+    - "export PATH=$PATH:$ANDROID_HOME/tools/"
 
 - name: Install android platform-tools
-  shell: "echo y | /opt/android-sdk-linux/tools/android update sdk --no-ui --all --filter {{ item }}"
-  with_items:
-    - "tools"
-    - "platform-tools"
-    - "build-tools-24"
-    - "build-tools-23.0.3"
-    - "build-tools-22.0.1"
-    - "android-23"
-    - "android-22"
-    - "android-21"
-    - "extra-android-support"
-    - "extra-google-m2repository"
-    - "extra-google-google_play_services"
-    - "extra-android-m2repository"
+  shell: "echo y | /opt/android-sdk-linux/tools/bin/sdkmanager \"platform-tools\" \"build-tools;29.0.1\" \"platforms;android-29\""
