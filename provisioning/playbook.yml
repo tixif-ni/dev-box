@@ -14,5 +14,6 @@
     - python
     - nvm
     - vim
-    #- rvm
     #- android
+    #- flutter
+    #- rvm

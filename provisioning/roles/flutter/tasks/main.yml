@@ -1,0 +1,43 @@
+---
+- name: Install Dependencies
+  become: yes
+  apt:
+    name: [lib32stdc++6]
+
+- name: Download Flutter SDK
+  get_url:
+    url=https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_{{ version }}.tar.xz
+    dest=/tmp
+
+- name: Untar Flutter SDK
+  unarchive: src=/tmp/flutter_linux_{{ version }}.tar.xz dest=/tmp
+
+- name: Move Flutter SDK to home folder
+  command: cp flutter /opt/flutter -rf chdir=/tmp
+  become: yes
+
+- name: Get user name
+  shell: id -u -n
+  register: user_name
+
+- name: Get user group
+  shell: id -g -n
+  register: user_group
+
+- name: Set sdk folder permissions
+  file:
+    path=/opt/flutter
+    recurse=yes
+    state=directory
+    owner={{ user_name.stdout }}
+    group={{ user_group.stdout }}
+  become: yes
+
+- name: Set vars
+  lineinfile:
+    line={{ item }}
+    dest=~/.zshrc
+    state=present
+    create=yes
+  with_items:
+    - "export PATH=$PATH:/opt/flutter/bin/"
