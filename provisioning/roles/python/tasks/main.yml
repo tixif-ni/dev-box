@@ -11,17 +11,7 @@
   become: yes
   with_items:
     - flake8
-    - virtualenv
-    - virtualenvwrapper
-
-- name: Add workon_home variable for virtualenvwrapper
-  lineinfile: line='export WORKON_HOME=$HOME/.virtualenvs' dest=~/.zshrc create=yes
-
-- name: Add project_home variable for virtualenvwrapper
-  lineinfile: line='export PROJECT_HOME=$HOME/repos' dest=~/.zshrc create=yes
-
-- name: Source virtualenvwrapper
-  lineinfile: line="source /usr/local/bin/virtualenvwrapper.sh" dest=~/.zshrc state=present create=yes
+    - pipenv
   
 - name: Install lib packages
   apt:
@@ -38,3 +28,12 @@
     ]
     state: latest
   become: true
+
+- name: Set aliases
+  lineinfile:
+    line={{ item }}
+    dest=~/.zshrc
+    state=present
+    create=yes
+  with_items:
+    - "alias prp=\"pipenv run python\""
