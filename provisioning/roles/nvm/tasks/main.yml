@@ -26,3 +26,13 @@
       }
       add-zsh-hook chpwd load-nvmrc
       load-nvmrc
+
+- name: Install global packages
+  shell: "npm install -g {{ item }}"
+  with_items:
+    - vscode-json-languageservice
+    - vscode-css-languageservice
+    - yaml-language-server
+    - dockerfile-language-server-nodejs
+    - typescript-tslint-plugin
+    - typescript
