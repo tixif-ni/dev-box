@@ -1,8 +1,23 @@
 ---
+- name: Install Dart SDK
+  apt_key:
+    url: https://dl-ssl.google.com/linux/linux_signing_key.pub
+    state: present
+  become: true
+
+- name: Add Dart repository
+  apt_repository: 
+    repo: 'deb [arch=amd64] https://storage.googleapis.com/download.dartlang.org/linux/debian stable main
+' 
+    state: present 
+    filename: dart 
+    update_cache: yes
+  become: true
+
 - name: Install Dependencies
   become: yes
   apt:
-    name: [lib32stdc++6]
+    name: [lib32stdc++6, dart]
 
 - name: Download Flutter SDK
   get_url:
@@ -41,3 +56,4 @@
     create=yes
   with_items:
     - "export PATH=$PATH:/opt/flutter/bin/"
+    - "export PATH=$PATH:/usr/lib/dart/bin"
