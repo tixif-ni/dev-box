@@ -7,8 +7,7 @@
 
 - name: Add Dart repository
   apt_repository: 
-    repo: 'deb [arch=amd64] https://storage.googleapis.com/download.dartlang.org/linux/debian stable main
-' 
+    repo: 'deb [arch=amd64] https://storage.googleapis.com/download.dartlang.org/linux/debian stable main' 
     state: present 
     filename: dart 
     update_cache: yes
