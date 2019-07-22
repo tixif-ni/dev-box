@@ -7,7 +7,7 @@
       ant,
       gradle,
       maven,
-      lib32ncurses6,
+      lib32ncurses5,
       lib32gomp1,
       lib32z1-dev,
       lib32gomp1,
