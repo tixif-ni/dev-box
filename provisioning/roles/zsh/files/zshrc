@@ -93,6 +93,11 @@ BULLETTRAIN_DIR_FG=black
 BULLETTRAIN_DIR_CONTEXT_SHOW=true
 # ENDBULLETTRAIN
 #
-# ANDROID
-export PATH="$HOME/android-sdk-macos/tools:$HOME/android-sdk-macos/platform-tools:$PATH"
-# ENDANDROID
+
+# Load ssh-agent on startup
+if [ ! -S ~/.ssh/ssh_auth_sock ]; then
+  eval `ssh-agent`
+  ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
+fi
+export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
+ssh-add -l > /dev/null || ssh-add
