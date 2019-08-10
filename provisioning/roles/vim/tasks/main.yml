@@ -8,7 +8,7 @@
 # Download settings from own repository
 - name: Download vim folder
   git:
-    repo=https://github.com/radyz/vim-radyz.git
+    repo=https://github.com/tixif-ni/dev-vim.git
     dest=~/.vim
     force=yes
 
