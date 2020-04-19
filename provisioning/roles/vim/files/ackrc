@@ -2,3 +2,4 @@
 --ignore-directory=is:.venv
 --ignore-directory=is:node_modules
 --ignore-directory=is:bower_components
+--ignore-directory=is:dist
