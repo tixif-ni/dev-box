@@ -25,6 +25,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         config.vm.define machine[:hostname], primary: machine[:primary], autostart: !machine[:primary].nil? do |node|
             node.vm.box = "ubuntu/bionic64"
             node.vm.network :private_network, ip: machine[:ip]
+            node.ssh.forward_agent = true
+            node.ssh.forward_x11 = true
 
             if Vagrant.has_plugin?('vagrant-hosts')
                 node.vm.provision :hosts, :sync_hosts => true
