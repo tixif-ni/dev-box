@@ -24,11 +24,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     servers.each do |machine|
         config.vm.define machine[:hostname], primary: machine[:primary], autostart: !machine[:primary].nil? do |node|
             node.vm.box = "ubuntu/bionic64"
-            node.vm.hostname = machine[:hostname]
             node.vm.network :private_network, ip: machine[:ip]
-            node.vm.provision :hosts, :sync_hosts => true
-            node.disksize.size = machine[:size]
 
+            if Vagrant.has_plugin?('vagrant-hosts')
+                node.vm.provision :hosts, :sync_hosts => true
+            end
+            if Vagrant.has_plugin?('vagrant-hostmanager')
+                node.vm.hostname = machine[:hostname]
+            end
+            if Vagrant.has_plugin?('vagrant-disksize')
+                node.disksize.size = machine[:size]
+            end
             if Vagrant.has_plugin?('vagrant-timezone')
               node.timezone.value = :host
             end
