@@ -29,6 +29,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             node.vm.provision :hosts, :sync_hosts => true
             node.disksize.size = machine[:size]
 
+            if Vagrant.has_plugin?('vagrant-timezone')
+              node.timezone.value = :host
+            end
+
             node.vm.provider :virtualbox do |vb|
               vb.linked_clone = true
               vb.memory = machine[:ram]
