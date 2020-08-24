@@ -11,7 +11,17 @@
   become: yes
   with_items:
     - flake8
-    - pipenv
+    - virtualenv
+    - virtualenvwrapper
+
+- name: Add workon_home variable for virtualenvwrapper
+  lineinfile: line='export WORKON_HOME=$HOME/.virtualenvs' dest=~/.zshrc create=yes
+
+- name: Add project_home variable for virtualenvwrapper
+  lineinfile: line='export PROJECT_HOME=$HOME/repos' dest=~/.zshrc create=yes
+
+- name: Source virtualenvwrapper
+  lineinfile: line="source /usr/local/bin/virtualenvwrapper.sh" dest=~/.zshrc state=present create=yes
   
 - name: Install lib packages
   apt:
@@ -29,12 +39,11 @@
     state: latest
   become: true
 
-- name: Set aliases
-  lineinfile:
-    line={{ item }}
-    dest=~/.zshrc
-    state=present
-    create=yes
-  with_items:
-    - "alias prp=\"pipenv run python\""
-    - "export PIPENV_VENV_IN_PROJECT=1"
+- name: Download latest poetry
+  get_url: url=https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py dest=/tmp
+
+- name: Install poetry
+  script: get-poetry.py
+  args:
+    chdir: /tmp
+    executable: python
