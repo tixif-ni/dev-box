@@ -25,3 +25,6 @@
 
 - name: Copy ackrc to home
   copy: src=ackrc dest=~/.ackrc 
+
+- name: Copy omnisharp to home
+  copy: src=omnisharp dest=~/.omnisharp/omnisharp.json 
